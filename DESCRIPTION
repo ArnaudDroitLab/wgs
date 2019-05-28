@@ -1,6 +1,6 @@
 Package: wgs
 Title: Automate the downloading of genbank wgs
-Version: 0.0.9
+Version: 0.0.10
 Authors@R:
     person(given = "Charles",
            family = "Joly Beauparlant",
@@ -20,6 +20,7 @@ Imports:
     dplyr,
     readr,
     stringr,
-    tools
+    tools,
+    Biostrings
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1

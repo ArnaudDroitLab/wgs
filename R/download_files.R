@@ -16,7 +16,7 @@
 #' @param metadata The metadata file downloaded with the
 #' \code{fetch_bacteria_metadata} function. If \code{NULL}, the pre-computed
 #' metadatas will be used. Default: \code{NULL}
-#' @param dir The output directory. Default: \code{downloads}.
+#' @param dir The output directory. Default: \code{.}.
 #' @param strict If \code{TRUE}, the names must be identical to the
 #' \code{organism_name} column of the metadata object (by default, it's the
 #' \code{bacteria} object). Otherwise, partial match will be allowed and the
@@ -38,42 +38,25 @@
 #' @importFrom tools md5sum
 #' @importFrom readr read_delim
 #' @importFrom stringr str_detect
+#' @importFrom stringr str_extract
 #' @importFrom stringr regex
 #' @importFrom dplyr filter
 #' @importFrom dplyr pull
 #'
 #' @export
 
-download_files <- function(n, metadata = NULL, dir = "downloads",
+download_files <- function(n, metadata = NULL, dir = ".", merge = NULL,
                            strict = TRUE, force = FALSE, verbose = FALSE) {
     stopifnot(is(n, "character"))
     stopifnot(length(n) >= 1)
-    stopifnot(is.null(metadata) | is(metadata, "data.frame"))
     stopifnot(dir.exists(dir))
     stopifnot(is(strict, "logical"))
     stopifnot(is(force, "logical"))
     stopifnot(is(verbose, "logical"))
 
-    if (is.null(metadata)) {
-        metadata <- bacteria
-    }
-    stopifnot("ftp_path" %in% colnames(metadata))
-    stopifnot("assembly_accession" %in% colnames(metadata))
-    stopifnot("asm_name" %in% colnames(metadata))
-
-    if (strict) {
-        stopifnot(all(n %in% metadata$organism_name))
-        current_metadata <- dplyr::filter(metadata, organism_name %in% n)
-    } else {
-        organism_name <- tolower(metadata$organism_name) %>%
-            stringr::str_extract("^[^ ]* [^ ]*")
-        reg <- paste(tolower(n), collapse = "|")
-        i <- stringr::str_detect(organism_name, reg)
-        i[is.na(i)] <- FALSE
-        current_metadata <- metadata[i,]
-    }
-
+    current_metadata <- filter_metadata_with_pattern(metadata, n, pattern, strict)
     stopifnot(nrow(current_metadata) >= 1)
+
     for (i in 1:nrow(current_metadata)) {
         download_file(current_metadata[i,], dir, force, verbose)
     }
@@ -93,7 +76,6 @@ download_file <- function(metadata, dir, force, verbose) {
 
     print_verbose(paste0("\nCurrent file: ", current_filename), verbose)
 
-    invalid_md5 <- TRUE
     md5_url <- paste0(metadata$ftp_path, "/md5checksums.txt")
     expected_md5 <- readr::read_delim(md5_url,
                                       col_names = c("md5", "file"),
@@ -104,6 +86,7 @@ download_file <- function(metadata, dir, force, verbose) {
         dplyr::pull(md5)
     stopifnot(length(expected_md5) == 1)
 
+    invalid_md5 <- TRUE
     if (!force) {
         if (file.exists(current_filename)) {
             print_verbose(paste0("    ", current_filename, " exists"), verbose)
@@ -142,4 +125,26 @@ download_file <- function(metadata, dir, force, verbose) {
 
 print_verbose <- function(msg, verbose) {
     if (verbose) message(msg)
+}
+
+filter_metadata_with_pattern <- function(metadata, n, pattern, strict) {
+    stopifnot(is.null(metadata) | is(metadata, "data.frame"))
+    if (is.null(metadata)) {
+        metadata <- bacteria
+    }
+    stopifnot("ftp_path" %in% colnames(metadata))
+    stopifnot("assembly_accession" %in% colnames(metadata))
+    stopifnot("asm_name" %in% colnames(metadata))
+    if (strict) {
+        stopifnot(all(n %in% metadata$organism_name))
+        current_metadata <- dplyr::filter(metadata, organism_name %in% n)
+    } else {
+        organism_name <- tolower(metadata$organism_name) %>%
+            stringr::str_extract("^[^ ]* [^ ]*")
+        reg <- paste(tolower(n), collapse = "|")
+        i <- stringr::str_detect(organism_name, reg)
+        i[is.na(i)] <- FALSE
+        current_metadata <- metadata[i,]
+    }
+    current_metadata
 }

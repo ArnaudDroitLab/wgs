@@ -25,8 +25,6 @@ Fetch the metadata for all the bacterias in Genbank
 \details{
 Data is obtained from the \code{assembly_summary.txt} file:
 ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/bacteria/assembly_summary.txt
-
-Only the assembly at the Complete Genome level are kept.
 }
 \examples{
 \dontrun{
