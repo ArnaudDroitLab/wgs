@@ -87,7 +87,7 @@ download_file <- function(metadata, dir, force, verbose) {
 
     cds_file <- paste0(metadata$assembly_accession, "_",
                        metadata$asm_name,
-                       "_cds_from_genomic.fna.gz")
+                       "_genomic.fna.gz")
     current_filename <- paste0(dir, "/", cds_file)
     current_url <- paste0(metadata$ftp_path, "/", cds_file)
 
@@ -100,7 +100,7 @@ download_file <- function(metadata, dir, force, verbose) {
                                       delim = "  ",
                                       col_types = "cc",
                                       progress = FALSE) %>%
-        dplyr::filter(stringr::str_detect(file, "cds_from_genomic")) %>%
+        dplyr::filter(file == paste0(" ./", cds_file)) %>%
         dplyr::pull(md5)
     stopifnot(length(expected_md5) == 1)
 
