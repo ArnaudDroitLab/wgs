@@ -5,8 +5,6 @@
 #' Data is obtained from the \code{assembly_summary.txt} file:
 #' ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/bacteria/assembly_summary.txt
 #'
-#' Only the assembly at the Complete Genome level are kept.
-#'
 #' @return A \code{data.frame} with the following columns:
 #' \itemize{
 #'   \item assembly_accession
@@ -43,6 +41,5 @@ fetch_bacteria_metadata <- function() {
                     infraspecific_name,
                     assembly_level,
                     version_status,
-                    ftp_path) %>%
-      dplyr::filter(assembly_level == "Complete Genome")
+                    ftp_path)
 }
