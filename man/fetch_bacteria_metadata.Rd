@@ -9,8 +9,14 @@ fetch_bacteria_metadata()
 \value{
 A \code{data.frame} with the following columns:
 \itemize{
-  \item First item
-  \item Second item
+  \item assembly_accession
+  \item asm_name
+  \item refseq_category
+  \item organism_name
+  \item infraspecific_name
+  \item assembly_level
+  \item version_status
+  \item ftp_path
 }
 }
 \description{

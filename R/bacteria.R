@@ -5,9 +5,10 @@
 #' Data is obtained from the \code{assembly_summary.txt} file:
 #' ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/bacteria/assembly_summary.txt
 #'
-#' @return A \code{tibble} with the following columns:
+#' @return A \code{data.frame} with the following columns:
 #' \itemize{
 #'   \item assembly_accession
+#'   \item asm_name
 #'   \item refseq_category
 #'   \item organism_name
 #'   \item infraspecific_name
@@ -34,6 +35,7 @@ fetch_bacteria_metadata <- function() {
 
   read_tsv(url, skip = 1, col_types = col_types, quote = "") %>%
       dplyr::select(assembly_accession = `# assembly_accession`,
+                    asm_name,
                     refseq_category,
                     organism_name,
                     infraspecific_name,
