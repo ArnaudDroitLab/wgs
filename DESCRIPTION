@@ -1,0 +1,18 @@
+Package: wgs
+Title: Automate the downloading of genbank wgs
+Version: 0.0.1
+Authors@R: 
+    person(given = "Charles",
+           family = "Joly Beauparlant",
+           role = c("aut", "cre"),
+           email = "Charles.Joly-Beauparlant@crchul.ulaval.ca")
+Description: This packages facilitates the download of CDS sequences from the
+    NCBI's genbank FTP site.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Suggests: 
+    testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
