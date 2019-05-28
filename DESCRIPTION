@@ -1,7 +1,7 @@
 Package: wgs
 Title: Automate the downloading of genbank wgs
-Version: 0.0.2
-Authors@R: 
+Version: 0.0.3
+Authors@R:
     person(given = "Charles",
            family = "Joly Beauparlant",
            role = c("aut", "cre"),
@@ -11,8 +11,13 @@ Description: This packages facilitates the download of CDS sequences from the
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Suggests: 
+Suggests:
     testthat,
     knitr,
     rmarkdown
+Imports:
+    magrittr,
+    dplyr,
+    readr
 VignetteBuilder: knitr
+RoxygenNote: 6.1.1
