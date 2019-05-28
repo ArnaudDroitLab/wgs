@@ -65,10 +65,12 @@ download_files <- function(n, metadata = NULL, dir = "downloads",
         stopifnot(all(n %in% metadata$organism_name))
         current_metadata <- dplyr::filter(metadata, organism_name %in% n)
     } else {
-        reg <- stringr::regex(reg, ignore_case = TRUE)
-
-        current_metadata <- dplyr::filter(metadata,
-                                stringr::str_detect(organism_name, reg))
+        organism_name <- tolower(metadata$organism_name) %>%
+            stringr::str_extract("^[^ ]* [^ ]*")
+        reg <- paste(tolower(n), collapse = "|")
+        i <- stringr::str_detect(organism_name, reg)
+        i[is.na(i)] <- FALSE
+        current_metadata <- metadata[i,]
     }
 
     stopifnot(nrow(current_metadata) >= 1)
