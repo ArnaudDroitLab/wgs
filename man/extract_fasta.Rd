@@ -4,10 +4,13 @@
 \alias{extract_fasta}
 \title{Extract fasta sequences}
 \usage{
-extract_fasta(blast_out, merged_fasta)
+extract_fasta(blast_out, metadata, merged_fasta)
 }
 \arguments{
 \item{blast_out}{The filename of the blast results}
+
+\item{metadata}{The subset of the metadata obtained with the
+\code{merge_files} or the \code{download_files} functions.}
 
 \item{merged_fasta}{The fasta obtained with the \code{merge_files} function}
 }
@@ -36,7 +39,7 @@ The blast results must contain an header with the following columns:
 \examples{
 \dontrun{
   metadata <- get_demo_metadata()
-  annotate_blast("test.out", metadata, dir = ".")
+  extract_fasta("test.out", metadata, "merged.fna")
 }
 
 }
