@@ -56,7 +56,7 @@ download_files <- function(n, metadata = NULL, dir = ".", merge = NULL,
     stopifnot(is(force, "logical"))
     stopifnot(is(verbose, "logical"))
 
-    current_metadata <- filter_metadata_with_pattern(metadata, n, strict)
+    current_metadata <- filter_metadata(metadata, n, strict)
     stopifnot(nrow(current_metadata) >= 1)
 
     for (i in 1:nrow(current_metadata)) {
@@ -133,8 +133,8 @@ print_verbose <- function(msg, verbose) {
     if (verbose) message(msg)
 }
 
-filter_metadata_with_pattern <- function(metadata, n, strict) {
-    validate_metadata(metadata)
+filter_metadata <- function(metadata, n, strict) {
+    metadata <- validate_metadata(metadata)
     if (strict) {
         stopifnot(all(n %in% metadata$organism_name))
         current_metadata <- dplyr::filter(metadata, organism_name %in% n)

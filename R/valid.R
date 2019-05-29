@@ -7,7 +7,7 @@ validate_metadata <- function(metadata) {
     stopifnot("ftp_path" %in% colnames(metadata))
     stopifnot("assembly_accession" %in% colnames(metadata))
     stopifnot("asm_name" %in% colnames(metadata))
-    invisible(TRUE)
+    invisible(metadata)
 }
 
 validate_blast <- function(blast_res) {
