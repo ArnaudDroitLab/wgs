@@ -126,7 +126,7 @@ extract_anno <- function(metadata, dir) {
     assembly_accession <- metadata$assembly_accession
     asm_name <- metadata$asm_name
 
-    fna <- paste0(assembly_accession, "_",
+    fna <- paste0(dir, "/", assembly_accession, "_",
                   asm_name, "_genomic.fna.gz")
                  
     n <- names(Biostrings::readDNAStringSet(fna))
