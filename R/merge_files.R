@@ -24,6 +24,7 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter
+#' @importFrom purrr walk
 #' @importFrom stringr str_extract
 #' @importFrom stringr str_detect
 #' @importFrom Biostrings readDNAStringSet
@@ -61,7 +62,7 @@ merge_files <- function(n, output, dir = ".", metadata = NULL, strict = FALSE,
         readDNAStringSet(x) %>%
             writeXStringSet(output, append = TRUE)
     }
-    walk(fna_files, merge_file)
+    purrr::walk(fna_files, merge_file)
 
     invisible(current_metadata)
 }
