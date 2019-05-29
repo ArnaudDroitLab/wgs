@@ -56,7 +56,7 @@ download_files <- function(n, metadata = NULL, dir = ".", merge = NULL,
     stopifnot(is(force, "logical"))
     stopifnot(is(verbose, "logical"))
 
-    current_metadata <- filter_metadata_with_pattern(metadata, n, pattern, strict)
+    current_metadata <- filter_metadata_with_pattern(metadata, n, strict)
     stopifnot(nrow(current_metadata) >= 1)
 
     for (i in 1:nrow(current_metadata)) {
@@ -133,7 +133,7 @@ print_verbose <- function(msg, verbose) {
     if (verbose) message(msg)
 }
 
-filter_metadata_with_pattern <- function(metadata, n, pattern, strict) {
+filter_metadata_with_pattern <- function(metadata, n, strict) {
     stopifnot(is.null(metadata) | is(metadata, "data.frame"))
     if (is.null(metadata)) {
         metadata <- bacteria
