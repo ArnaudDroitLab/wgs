@@ -36,7 +36,7 @@ merge_files <- function(n, output, dir = ".", metadata = NULL, strict = FALSE,
     stopifnot(is(output, "character"))
     stopifnot(dir.exists(dirname(output)))
 
-    current_metadata <- filter_metadata(metadata, n, pattern, strict)
+    current_metadata <- filter_metadata(metadata, n, strict)
 
     fna_files <- paste0(dir, "/",
                         current_metadata$assembly_accession, "_",
