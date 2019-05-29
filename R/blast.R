@@ -18,6 +18,8 @@
 #' }
 #'
 #' @param blast_out The filename of the blast results
+#' @param metadata The subset of the metadata obtained with the
+#' \code{merge_files} or the \code{download_files} functions.
 #' @param merged_fasta The fasta obtained with the \code{merge_files} function
 #'
 #' @return TODO
@@ -25,7 +27,7 @@
 #' @examples
 #' \dontrun{
 #'   metadata <- get_demo_metadata()
-#'   annotate_blast("test.out", metadata, dir = ".")
+#'   extract_fasta("test.out", metadata, "merged.fna")
 #' }
 #'
 #' @importFrom magrittr %>%
@@ -40,7 +42,7 @@
 #' @importFrom Biostrings readDNAStringSet
 #'
 #' @export
-extract_fasta <- function(blast_out, merged_fasta) {
+extract_fasta <- function(blast_out, metadata, merged_fasta) {
     stopifnot(file.exists(blast_out))
     blast_res <- readr::read_tsv(blast_out, col_types = "ccddddddd")
     validate_blast(blast_res)
