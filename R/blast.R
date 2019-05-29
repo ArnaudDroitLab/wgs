@@ -34,6 +34,7 @@
 #' @importFrom readr read_tsv
 #' @importFrom dplyr left_join
 #' @importFrom dplyr if_else
+#' @importFrom dplyr mutate
 #' @importFrom tibble tibble
 #' @importFrom GenomicRanges GRanges 
 #' @importFrom IRanges IRanges
@@ -54,9 +55,9 @@ extract_fasta <- function(blast_out, metadata, merged_fasta) {
     fna_desc <- tibble::tibble(id = stringr::str_extract(names(fna), "^[^ ]*"),
                                full_name = names(fna))
     blast <- dplyr::left_join(blast_res, fna_desc, by = c("sseqid" = "id")) %>%
-        mutate(tmp = sstart,
-               sstart = dplyr::if_else(sstart < send, sstart, send),
-               send = dplyr::if_else(tmp < send, send, tmp))
+        dplyr::mutate(tmp = sstart,
+                      sstart = dplyr::if_else(sstart < send, sstart, send),
+                      send = dplyr::if_else(tmp < send, send, tmp))
 
     gr <- GenomicRanges::GRanges(blast$full_name,
                                  IRanges::IRanges(blast$sstart, blast$send))
