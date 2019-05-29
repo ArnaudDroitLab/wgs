@@ -26,6 +26,8 @@
 #' @param verbose Print details of the downloading process. Default:
 #' \code{FALSE}.
 #' @param cores Number of cores to use for the download. Default: 1.
+#' @param check_md5 Check the md5 value of the files that are already
+#' downloaded. Default: \code{FALSE}.
 #'
 #' @return Invisibly return the subset of metadata that was selected to
 #' download.
@@ -48,7 +50,7 @@
 #' @export
 download_files <- function(n, metadata = NULL, dir = ".", merge = NULL,
                            strict = TRUE, force = FALSE, verbose = FALSE,
-                           cores = 1) {
+                           cores = 1, check_md5 = FALSE) {
     stopifnot(is(n, "character"))
     stopifnot(length(n) >= 1)
     stopifnot(dir.exists(dir))
@@ -60,7 +62,7 @@ download_files <- function(n, metadata = NULL, dir = ".", merge = NULL,
     stopifnot(nrow(current_metadata) >= 1)
 
     for (i in 1:nrow(current_metadata)) {
-        download_file(current_metadata[i,], dir, force, verbose)
+        download_file(current_metadata[i,], dir, force, verbose, check_md5)
     }
     tmp <- split(current_metadata, 1:nrow(current_metadata)) %>%
         parallel::mclapply(function(x) download_file(x, dir, force, verbose),
@@ -69,7 +71,7 @@ download_files <- function(n, metadata = NULL, dir = ".", merge = NULL,
     invisible(metadata)
 }
 
-download_file <- function(metadata, dir, force, verbose) {
+download_file <- function(metadata, dir, force, verbose, check_md5) {
     stopifnot(is(metadata, "data.frame"))
     stopifnot(nrow(metadata) == 1)
 
@@ -81,19 +83,23 @@ download_file <- function(metadata, dir, force, verbose) {
 
     print_verbose(paste0("\nCurrent file: ", current_filename), verbose)
 
-    md5_url <- paste0(metadata$ftp_path, "/md5checksums.txt")
-    expected_md5 <- readr::read_delim(md5_url,
-                                      col_names = c("md5", "file"),
-                                      delim = "  ",
-                                      col_types = "cc",
-                                      progress = FALSE) %>%
-        dplyr::filter(file == paste0(" ./", cds_file)) %>%
-        dplyr::pull(md5)
-    stopifnot(length(expected_md5) == 1)
+    if (check_md5) {
+        md5_url <- paste0(metadata$ftp_path, "/md5checksums.txt")
+        expected_md5 <- readr::read_delim(md5_url,
+                                          col_names = c("md5", "file"),
+                                          delim = "  ",
+                                          col_types = "cc",
+                                          progress = FALSE) %>%
+            dplyr::filter(file == paste0(" ./", cds_file)) %>%
+            dplyr::pull(md5)
+        stopifnot(length(expected_md5) == 1)
+        invalid_md5 <- TRUE
+    } else {
+                print_verbose("    Skipping md5 validation.", verbose)
+    }
 
-    invalid_md5 <- TRUE
     if (!force) {
-        if (file.exists(current_filename)) {
+        if (file.exists(current_filename) & check_md5) {
             print_verbose(paste0("    ", current_filename, " exists"), verbose)
 
             observed_md5 <- tools::md5sum(current_filename)
