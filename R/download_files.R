@@ -63,7 +63,7 @@ download_files <- function(n, metadata = NULL, dir = ".", merge = NULL,
         download_file(current_metadata[i,], dir, force, verbose, check_md5)
     }
 
-    invisible(metadata)
+    invisible(current_metadata)
 }
 
 download_file <- function(metadata, dir, force, verbose, check_md5) {
