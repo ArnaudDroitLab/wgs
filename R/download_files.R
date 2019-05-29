@@ -134,13 +134,7 @@ print_verbose <- function(msg, verbose) {
 }
 
 filter_metadata_with_pattern <- function(metadata, n, strict) {
-    stopifnot(is.null(metadata) | is(metadata, "data.frame"))
-    if (is.null(metadata)) {
-        metadata <- bacteria
-    }
-    stopifnot("ftp_path" %in% colnames(metadata))
-    stopifnot("assembly_accession" %in% colnames(metadata))
-    stopifnot("asm_name" %in% colnames(metadata))
+    validate_metadata(metadata)
     if (strict) {
         stopifnot(all(n %in% metadata$organism_name))
         current_metadata <- dplyr::filter(metadata, organism_name %in% n)
