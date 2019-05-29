@@ -5,7 +5,7 @@
 \title{Download fasta files}
 \usage{
 download_files(n, metadata = NULL, dir = ".", merge = NULL,
-  strict = TRUE, force = FALSE, verbose = FALSE)
+  strict = TRUE, force = FALSE, verbose = FALSE, cores = 1)
 }
 \arguments{
 \item{n}{The names of the bacteria to download, correcponds to the
@@ -27,6 +27,8 @@ already present in the \code{dir/fna} directory. Default: \code{FALSE}.}
 
 \item{verbose}{Print details of the downloading process. Default:
 \code{FALSE}.}
+
+\item{cores}{Number of cores to use for the download. Default: 1.}
 }
 \value{
 Invisibly return the subset of metadata that was selected to

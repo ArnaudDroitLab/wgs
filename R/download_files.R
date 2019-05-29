@@ -25,6 +25,7 @@
 #' already present in the \code{dir/fna} directory. Default: \code{FALSE}.
 #' @param verbose Print details of the downloading process. Default:
 #' \code{FALSE}.
+#' @param cores Number of cores to use for the download. Default: 1.
 #'
 #' @return Invisibly return the subset of metadata that was selected to
 #' download.
@@ -42,11 +43,12 @@
 #' @importFrom stringr regex
 #' @importFrom dplyr filter
 #' @importFrom dplyr pull
+#' @importFrom parallel mclapply
 #'
 #' @export
-
 download_files <- function(n, metadata = NULL, dir = ".", merge = NULL,
-                           strict = TRUE, force = FALSE, verbose = FALSE) {
+                           strict = TRUE, force = FALSE, verbose = FALSE,
+                           cores = 1) {
     stopifnot(is(n, "character"))
     stopifnot(length(n) >= 1)
     stopifnot(dir.exists(dir))
@@ -60,6 +62,9 @@ download_files <- function(n, metadata = NULL, dir = ".", merge = NULL,
     for (i in 1:nrow(current_metadata)) {
         download_file(current_metadata[i,], dir, force, verbose)
     }
+    tmp <- split(current_metadata, 1:nrow(current_metadata)) %>%
+        parallel::mclapply(function(x) download_file(x, dir, force, verbose),
+                 mc.cores = cores)
 
     invisible(metadata)
 }
@@ -121,6 +126,7 @@ download_file <- function(metadata, dir, force, verbose) {
             stop("Invalid md5")
         }
     }
+    invisible(current_filename)
 }
 
 print_verbose <- function(msg, verbose) {
