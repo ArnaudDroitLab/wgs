@@ -70,8 +70,7 @@ download_file <- function(metadata, dir, force, verbose, check_md5) {
     stopifnot(is(metadata, "data.frame"))
     stopifnot(nrow(metadata) == 1)
 
-    cds_file <- paste0(metadata$assembly_accession, "_",
-                       stringr::str_extract(metadata$ftp_path, "[^\\/]*$"),
+    cds_file <- paste0(stringr::str_extract(metadata$ftp_path, "[^\\/]*$"),
                        "_genomic.fna.gz")
     current_filename <- paste0(dir, "/", cds_file)
     current_url <- paste0(metadata$ftp_path, "/", cds_file)
