@@ -117,12 +117,12 @@ download_file <- function(metadata, dir, force, verbose, check_md5) {
                       method = "curl",
                       extra = "-L")
 
-        if (!check_md5) {
+        if (check_md5) {
             expected_md5 <- get_md5(metadata, cds_file)
-        }
-        observed_md5 <- tools::md5sum(current_filename)
-        if (observed_md5 != expected_md5) {
-            stop("Invalid md5")
+            observed_md5 <- tools::md5sum(current_filename)
+            if (observed_md5 != expected_md5) {
+                stop("Invalid md5")
+            }
         }
     }
     invisible(current_filename)
