@@ -40,7 +40,7 @@ merge_files <- function(n, output, dir = ".", metadata = NULL, strict = FALSE,
     current_metadata <- filter_metadata(metadata, n, strict)
 
     fna_files <- paste0(dir, "/",
-                        stringr::str_extract(metadata$ftp_path, "[^\\/]*$"),
+                        stringr::str_extract(current_metadata$ftp_path, "[^\\/]*$"),
                         "_genomic.fna.gz")
     stopifnot(all(purrr::map_lgl(fna_files, file.exists)))
 
