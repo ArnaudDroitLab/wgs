@@ -123,11 +123,8 @@ annotate_blast <- function(blast_out, metadata, dir = ".") {
 extract_anno <- function(metadata, dir) {
     stopifnot(nrow(metadata) == 1)
 
-    assembly_accession <- metadata$assembly_accession
-    asm_name <- metadata$asm_name
-
-    fna <- paste0(dir, "/", assembly_accession, "_",
-                  asm_name, "_genomic.fna.gz")
+    fna <- paste0(dir, "/", basename(metadata$ftp_path),
+                  "_genomic.fna.gz")
                  
     n <- names(Biostrings::readDNAStringSet(fna))
 
